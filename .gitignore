@@ -39,3 +39,8 @@ transaction-logs
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
