@@ -1,5 +1,4 @@
 version: '3.1'
-
 services:
 
   backend:
@@ -9,6 +8,8 @@ services:
       - db
     environment:
       MYSQL_HOST: db
+      MYSQL_USERNAME: exampleuser
+      MYSQL_PASSWORD: examplepass
     ports:
       - 5000:5000
       - 5005:5005
@@ -17,12 +18,16 @@ services:
     working_dir: /usr/src/mymaven
 
   db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: examplerootpassword
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
     ports:
       - 3306:3306
+    # volumes:
+    #   - ./src/db-setup.sql:/docker-entrypoint-initdb.d/dump.sql
 
   adminer:
     image: adminer
