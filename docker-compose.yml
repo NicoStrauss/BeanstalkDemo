@@ -4,13 +4,14 @@ services:
 
   backend:
     image: maven:3.6.3-jdk-8
-    command: mvn clean spring-boot:run
+    command: mvn spring-boot:run
     depends_on:
       - db
     environment:
       MYSQL_HOST: db
     ports:
       - 5000:5000
+      - 5005:5005
     volumes:
       - .:/usr/src/mymaven:rw
     working_dir: /usr/src/mymaven

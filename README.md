@@ -50,6 +50,37 @@ View the database in the Adminer user interface at:
 
     http://localhost:8080
 
+# Debugging
+
+The pom.xml is already configured for remote debugging:
+
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+      <version>2.0.3.RELEASE</version>
+      <configuration>
+        <jvmArguments>
+          -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+        </jvmArguments>
+      </configuration>
+    </plugin>
+
+This exposes the debugger at http://localhost:5005
+With VSCode you can attach to a remote debugger using a .vscode/launch.json file:
+
+    {
+      "version": "0.2.0",
+      "configurations": [
+        {
+          "type": "java",
+          "name": "Debug (Attach) - Remote",
+          "request": "attach",
+          "hostName": "localhost",
+          "port": 5005
+        }
+      ]
+    }
+
 
 ## Directory structure
 
