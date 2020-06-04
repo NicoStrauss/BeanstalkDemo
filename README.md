@@ -39,7 +39,7 @@ View the backend at:
 
 Add some data and check that it was saved using curl:
 
-    curl localhost:5000/demo/add -d name=First -d email=someemail@someemailprovider.com
+    curl localhost:5000/demo/add -d name=Terry -d email=terry@email.com
     curl localhost:5000/demo/all
 
 View the API in your browser at:
