@@ -74,7 +74,7 @@ With VSCode you can attach to a remote debugger using a .vscode/launch.json file
       ]
     }
 
-## Deployment
+## Creating AWS resources
 
 Ensure you have the development tools installed:
 
@@ -89,23 +89,59 @@ Set up an Elastic Beanstalk application environment:
     aws elasticbeanstalk create-application --application-name project-name
     aws elasticbeanstalk create-environment --application-name project-name --cname-prefix project-name --environment-name development --solution-stack-name "64bit Amazon Linux 2018.03 v2.10.7 running Java 8"
 
+Create an S3 bucket for storing application versions:
+
+    aws s3 mb s3://project-name-files
+
+Create an RDS database:
+
+    aws rds create-db-instance \
+      --db-name exampledb \
+      --db-instance-identifier project-name \
+      --db-instance-class db.t2.micro \
+      --allocated-storage 20 \
+      --engine mysql \
+      --master-username exampleuser \
+      --master-user-password examplepass
+
+Update Elastic Beanstalk environment variables with database connection settings:
+
+    aws elasticbeanstalk update-environment --environment-name development --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=MYSQL_HOST,Value=project-name.c36h2vjbn47h.us-west-2.rds.amazonaws.com
+
+
+## Deployment
+
 Build a compiled .jar version of the app using the maven package command:
 
+    docker-compose up db
     mvn clean package spring-boot:repackage
 
-This will create a compiled .jar file at: 
+This will create a compiled .jar file at:
 
     ./target/springelastic-0.0.1-SNAPSHOT.jar
 
-Create an S3 bucket and upload the compiled .jar file:
+IF you want you can test your compiled version using:
 
-    aws s3 mb s3://project-name
-    aws s3 cp target/springelastic-0.0.1-SNAPSHOT.jar s3://project-name/springelastic-0.0.1-SNAPSHOT.jar
+    java -jar ./target/springelastic-0.0.1-SNAPSHOT.jar
+
+Upload the compiled .jar file to your s3 bucket:
+
+    aws s3 cp target/springelastic-0.0.1-SNAPSHOT.jar s3://project-name-files/springelastic-0.0.1-SNAPSHOT.jar
 
 Create a new application version and update the environment with the version:
 
     aws elasticbeanstalk create-application-version --application-name project-name --version-label "0.0.1" --source-bundle S3Bucket="project-name-files",S3Key="springelastic-0.0.1-SNAPSHOT.jar"
     aws elasticbeanstalk update-environment --environment-name development --version-label "0.0.1"
+
+
+# Shutting down AWS resources
+
+To clean up environment instances (and save billing costs), delete your buckets and resources using the commands:
+
+    aws s3 rm s3://project-name-files --recursive
+    aws rds delete-db-instance --db-instance-identifier project-name --final-db-snapshot-identifier project-name-snapshot
+    aws elasticbeanstalk terminate-environment --environment-name development
+    aws elasticbeanstalk delete-application --application-name project-name
 
 
 ## Directory structure
