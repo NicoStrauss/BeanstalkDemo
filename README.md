@@ -134,7 +134,65 @@ Create a new application version and update the environment with the version:
     aws elasticbeanstalk update-environment --environment-name development --version-label "0.0.1"
 
 
-# Shutting down AWS resources
+## Using an AWS code repository (optional)
+
+Ensure you have the development tools installed:
+
+    brew install awscli
+    pip install git-remote-codecommit
+
+Create a git repository:
+
+    aws codecommit create-repository --repository-name project-name --repository-description "Project description"
+
+Clone the repo locally:
+
+    git clone codecommit::us-west-2://project-name\
+
+Add your application code and push your changes to CodeCommit:
+
+    git commit
+    git push
+
+
+## Automating deployments
+
+Follow steps from the previous section titled [Creating AWS resources](#creating-aws-resources) to set up the initial environments.
+
+Then add a buildspec.yml to your codebase, containing the build/deploy steps:
+
+    version: 0.2
+    phases:
+      pre_build:
+        commands:
+          - mvn install -Dmaven.test.skip=true 
+      post_build:
+        commands:
+          - mvn package -Dmaven.test.skip=true 
+    artifacts:
+      files:
+        - target/springelastic-0.0.1-SNAPSHOT.jar
+      discard-paths: yes
+    cache:
+      paths:
+        - '/root/.m2/**/*'
+
+If you have existing build pipelines, you can download their configuration using:
+
+    aws codebuild batch-get-projects --names project-name-build > ./aws/build.json
+    aws codepipeline get-pipeline --name project-name-pipeline > ./aws/pipeline.json
+
+Otherwise you can modify the example configuration files to match your needs, then create a new build pipeline using:
+
+    aws codebuild create-project --cli-input-json file://aws/build.json
+    aws codepipeline create-pipeline --cli-input-json file://aws/pipeline.json
+
+If the commands are successful, you should be able to view the running pipeline at:
+
+    https://us-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/project-name-pipeline/view?region=us-west-2
+
+
+## Shutting down AWS resources
 
 To clean up environment instances (and save billing costs), delete your buckets and resources using the commands:
 
@@ -143,9 +201,15 @@ To clean up environment instances (and save billing costs), delete your buckets 
     aws elasticbeanstalk terminate-environment --environment-name development
     aws elasticbeanstalk delete-application --application-name project-name
 
+If you created automated pipelines and builds, delete them using:
+
+    aws codebuild delete-project --name project-name-build
+    aws codepipeline delete-pipeline --name project-name-pipeline
+
 
 ## Directory structure
 
+    /aws                                  --> AWS pipeline/build config examples
     /src                                  --> Source files
     /target                               --> Compiled application
 
