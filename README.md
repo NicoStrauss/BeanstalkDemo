@@ -200,7 +200,7 @@ If the commands are successful, you should be able to view the running pipeline 
 
 To clean up environment instances (and save billing costs), delete your buckets and resources using the commands:
 
-    aws s3 rm s3://project-name-files --recursive
+    aws s3 rb s3://project-name-files
     aws rds delete-db-instance --db-instance-identifier project-name --final-db-snapshot-identifier project-name-snapshot
     aws elasticbeanstalk terminate-environment --environment-name development
     aws elasticbeanstalk delete-application --application-name project-name
