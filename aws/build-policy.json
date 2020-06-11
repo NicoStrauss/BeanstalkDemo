@@ -28,7 +28,7 @@
     {
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::codepipeline-us-west-2-*"
+        "arn:aws:s3:::project-name-files/*"
       ],
       "Action": [
         "s3:PutObject",
