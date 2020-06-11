@@ -177,14 +177,18 @@ Then add a buildspec.yml to your codebase, containing the build/deploy steps:
       paths:
         - '/root/.m2/**/*'
 
-If you have existing build pipelines, you can download their configuration using:
+Create a role, policies and project for CodeBuild:
 
-    aws codebuild batch-get-projects --names project-name-build > ./aws/build.json
-    aws codepipeline get-pipeline --name project-name-pipeline > ./aws/pipeline.json
-
-Otherwise you can modify the example configuration files to match your needs, then create a new build pipeline using:
-
+    aws iam create-role --role-name project-name-build-role --assume-role-policy-document file://aws/build-role.json
+    aws iam create-policy --policy-name project-name-build-policy --policy-document file://aws/build-policy.json
+    aws iam attach-role-policy --role-name project-name-build-role --policy-arn ARN-FROM-PREVIOUS-STEP
     aws codebuild create-project --cli-input-json file://aws/build.json
+
+Create a role, policies and pipeline for CodePipeline:
+
+    aws iam create-role --role-name project-name-pipeline-role --assume-role-policy-document file://aws/pipeline-role.json
+    aws iam create-policy --policy-name project-name-pipeline-policy --policy-document file://aws/pipeline-policy.json
+    aws iam attach-role-policy --role-name project-name-pipeline-role --policy-arn ARN-FROM-PREVIOUS-STEP
     aws codepipeline create-pipeline --cli-input-json file://aws/pipeline.json
 
 If the commands are successful, you should be able to view the running pipeline at:

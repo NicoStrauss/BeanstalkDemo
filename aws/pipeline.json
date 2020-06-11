@@ -1,7 +1,7 @@
 {
   "pipeline": {
     "name": "project-name-pipeline",
-    "roleArn": "arn:aws:iam::1234567890:role/service-role/AWSCodePipelineServiceRole-us-west-2-project-name-pipeline",
+    "roleArn": "arn:aws:iam::805168983508:role/project-name-pipeline-role",
     "artifactStore": {
       "type": "S3",
       "location": "project-name-files"

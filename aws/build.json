@@ -15,5 +15,5 @@
     "image": "aws/codebuild/standard:1.0",
     "computeType": "BUILD_GENERAL1_SMALL"
   },
-  "serviceRole": "arn:aws:iam::1234567890:role/service-role/codebuild-project-name-build-service-role"
+  "serviceRole": "arn:aws:iam::805168983508:role/project-name-build-role"
 }
