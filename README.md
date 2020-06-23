@@ -29,6 +29,10 @@ View the backend at:
 
 ## Testing the API
 
+View the OpenAPI documentation auto-generated at:
+
+    http://localhost:5000/swagger-ui.html
+
 Add some data and check that it was saved using curl:
 
     curl localhost:5000/demo/add -d name=Terry -d email=terry@email.com
