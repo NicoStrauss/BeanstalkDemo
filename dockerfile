@@ -11,4 +11,4 @@ COPY target/springelastic-0.0.1-SNAPSHOT.jar application.jar
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "application.jar"]
