@@ -5,10 +5,10 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # Copy the built jar file into the container
-COPY target/springelastic-0.0.1-SNAPSHOT.jar application.jar
+COPY target/springelastic-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port your app runs on (optional)
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "application.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
